@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_example_3_layers/Data/DataResponse.dart';
 import 'package:flutter_example_3_layers/Entities/Memo.dart';
 import 'package:flutter_example_3_layers/env.dart';
-import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'DB.dart';
