@@ -2,36 +2,32 @@ import 'dart:convert';
 
 import 'package:flutter_example_3_layers/Data/DataResponse.dart';
 import 'package:flutter_example_3_layers/Entities/User.dart';
-import 'package:flutter_example_3_layers/env.dart';
-import 'package:http/http.dart' as http;
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'DB.dart';
+
 
 class UserData{
 
 
-  Future<DataResponse> login(String email,String password) async{
+   Future<DataResponse> login(String email,String password) async{
     DataResponse dataResponse=new DataResponse();
     try{
-      var url = Uri.parse(host+'/api/login');
-      final http.Response response =await http.post(url,
-          body: {'email': email, 'password': password});
+      Database dataBase=await DB.openDB();
+      List<Map> data=await dataBase.rawQuery("SELECT * FROM USER  WHERE EMAIL=? AND PASSWORD=? ORDER BY ID DESC LIMIT 1",[email,password]);
+      if (data.length>0){
 
-      print(response.body);
-      const JsonDecoder decoder = const JsonDecoder();
-      var item = decoder.convert(response.body);
-
-      if (response.statusCode == 200) {
-        var data=item['data'];
-
+        print(data[0].toString());
         User user=new User();
-        user.id=data['id'].toString();
-        user.name=data['name'];
-        user.email=data['email'];
-        user.token=item['token'];
+        user.id=data[0]['ID'].toString();
+        user.name=data[0]['NAME'];
+        user.email=data[0]['EMAIL'];
 
         dataResponse.data=user;
         dataResponse.status=true;
+      }else{
+        dataResponse.message="Error, credenciales no validas";
       }
-      dataResponse.message=item['message'];
     }catch(error){
       print(error.toString());
       dataResponse.message=error.toString();
@@ -39,30 +35,34 @@ class UserData{
     return dataResponse;
   }
 
-  Future<DataResponse> signup(String name,String email,String password,String passwordConfirm) async{
+  Future<DataResponse> signup(String name,String email,String password) async{
     DataResponse dataResponse=new DataResponse();
 
     try{
-      var url = Uri.parse(host+'/api/signup');
-      final http.Response response =await http.post(url,
-          body: {'name': name,'email': email, 'password': password , 'password_confirm': passwordConfirm});
+      Database dataBase=await DB.openDB();
 
-      print(response.body);
-      const JsonDecoder decoder = const JsonDecoder();
-      var item = decoder.convert(response.body);
-      if (response.statusCode == 200) {
-        var data=item['data'];
+      List<Map> validateEmail=await dataBase.rawQuery("SELECT * FROM USER WHERE EMAIL=? ",[email]);
+      print(validateEmail);
+      if (validateEmail.isEmpty){
+        if (name!='' && email!='' && password!='') {
+          await dataBase.insert("USER", {"name":name,"email":email,"password":password});
 
-        User user=new User();
-        user.id=data['id'].toString();
-        user.name=data['name'];
-        user.email=data['email'];
-        user.token=item['token'];
+          List<Map> data=await dataBase.rawQuery("SELECT * FROM USER ORDER BY ID DESC LIMIT 1");
+          print(data[0].toString());
+          User user=new User();
+          user.id=data[0]['ID'].toString();
+          user.name=data[0]['NAME'];
+          user.email=data[0]['EMAIL'];
 
-        dataResponse.data=user;
-        dataResponse.status=true;
+          dataResponse.data=user;
+          dataResponse.status=true;
+        }else{
+          dataResponse.message="Error al crear, falta algun campo";
+        }
+      }else{
+        dataResponse.message="Error al crear, el email ya existe";
       }
-      dataResponse.message=item['message'];
+
     }catch(error){
       print(error.toString());
       dataResponse.message=error.toString();
@@ -71,26 +71,9 @@ class UserData{
     return dataResponse;
   }
 
-  Future<DataResponse> logout(String _token) async{
+  Future<DataResponse> logout() async{
     DataResponse dataResponse=new DataResponse();
-    try{
-      var url = Uri.parse(host+'/api/logout');
-      final http.Response response =await http.post(url,
-          headers: { 'Accept' : 'application/json' , 'Authorization' : 'Bearer '+_token },
-          body: { });
-
-      print(response.body);
-      const JsonDecoder decoder = const JsonDecoder();
-      var item = decoder.convert(response.body);
-
-      dataResponse.status=response.statusCode == 200;
-      dataResponse.message=item['message'];
-
-    }catch(error){
-      print(error.toString());
-      dataResponse.message=error.toString();
-    }
-
+    dataResponse.status=true;
     return dataResponse;
   }
 

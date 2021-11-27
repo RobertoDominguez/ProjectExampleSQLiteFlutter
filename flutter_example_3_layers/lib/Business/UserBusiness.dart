@@ -27,7 +27,7 @@ class UserBuiness{
       return dataResponse;
     }
 
-    dataResponse=await this.userData.signup(name,email,password,passwordConfirm);
+    dataResponse=await this.userData.signup(name,email,password);
     if (dataResponse.status){
       User usr=dataResponse.data;
       UserSession.setSession(usr);
@@ -37,7 +37,7 @@ class UserBuiness{
   }
 
   Future<DataResponse> logout() async{
-    DataResponse dataResponse=await this.userData.logout(UserSession.user.token);
+    DataResponse dataResponse=await this.userData.logout();
     if (dataResponse.status){
       User usr=new User();
       UserSession.setSession(usr);

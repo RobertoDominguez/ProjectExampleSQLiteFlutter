@@ -8,7 +8,7 @@ class MemoBusiness{
 
   Future<DataResponse> index() async{
     List<Memo> items=List.generate(0, (index) => new Memo());
-    DataResponse dataResponse=await memoData.index(UserSession.user.token);
+    DataResponse dataResponse=await memoData.index(UserSession.user.id);
     items=dataResponse.data;
     return dataResponse;
   }
@@ -17,17 +17,18 @@ class MemoBusiness{
     Memo memo=new Memo();
     memo.title=title;
     memo.content=content;
-    DataResponse dataResponse=await memoData.store(UserSession.user.token,memo);
+    memo.userId=UserSession.user.id;
+    DataResponse dataResponse=await memoData.store(memo);
     return dataResponse;
   }
 
   Future<DataResponse> update(Memo memo) async{
-    DataResponse dataResponse=await memoData.update(UserSession.user.token,memo);
+    DataResponse dataResponse=await memoData.update(memo);
     return dataResponse;
   }
 
   Future<DataResponse> delete(String id) async{
-    return await memoData.delete(UserSession.user.token,id);
+    return await memoData.delete(id);
   }
 
 

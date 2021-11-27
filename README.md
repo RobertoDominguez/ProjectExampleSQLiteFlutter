@@ -5,34 +5,16 @@
 </p>
 
 ## Project example 
-In this repository you can find an example of project made in MVC laravel and 3 Layers flutter
+In this repository you can find an example of project made in 3 Layers flutter with SQLite as Database 
 
 ## Ejemplo de proyecto
-En este repositorio puedes encontrar un ejemplo de proyecto realizado en MVC laravel y 3 Capas flutter
+En este repositorio puedes encontrar un ejemplo de proyecto realizado en 3 Capas flutter con SQLite
 
 ## Development environment used
-Laravel was used with MVC as the architecture pattern for the backend and Flutter with 3 layers as the architecture pattern for the frontend
+SQLite was used as database manager and Flutter with 3 layers as the architecture pattern for the frontend
 
 ## Entorno de desarrollo utilizado
-Se utilizo Laravel con MVC como patron de arquitectura para el backend y Flutter con 3 capas como patron de arquitectura para frontend
-
-## Steps to use the project in Laravel
-1) Open terminal and run "composer install"
-2) Copy .env.example as .env
-3) Open the terminal and run "php artisan key: generate"
-4) Open terminal and run "php artisan storage: link"
-5) Inside .env configure the credentials of the db
-6) Open terminal and run "php artisan migrate: fresh --seed"
-7) To create the local server run "php artisan serve --host=ip --port=8001"
-
-## Pasos para utilizar el proyecto en Laravel
-1) Abrir la terminal y ejecutar "composer install"
-2) Copiar .env.example como .env
-3) Abrir la terminal y ejecutar "php artisan key:generate"
-4) Abrir la terminal y ejecutar "php artisan storage:link"
-4) Dentro de .env configurar las credenciales de la db
-5) Abrir la terminal y ejecutar "php artisan migrate:fresh --seed"
-6) Para crear el servidor local ejecutar "php artisan serve --host=ip --port=8001"
+Se utilizo SQLite como gestor de base de datos y Flutter con 3 capas como patron de arquitectura para frontend
 
 ## Steps to use the project in flutter
 1) Open the terminate in pubsec.yaml and run "flutter pub get"
